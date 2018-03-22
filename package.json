@@ -1,0 +1,13 @@
+{
+  "name": "cite-grabber",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "author": "Daniel Morgenstern <morgenstern.daniel@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "eslint": "^4.19.1",
+    "puppeteer": "^1.2.0"
+  }
+}
