@@ -1,6 +1,8 @@
+/* globals window */
+
 const puppeteer = require('puppeteer');
-// const cred = require('./cred');
-const config = require('./config');
+const CRED = require('./cred');
+const CONFIG = require('./config');
 
 // console.log(cred, config);
 async function run() {
@@ -9,9 +11,42 @@ async function run() {
   });
   const page = await browser.newPage();
 
-  await page.goto(`https://scholar.google.de/scholar?scilib=${config.labelId}`);
-  const loginButtonSelector = '#gs_hdr_drw_bot > a';
-  await page.click(loginButtonSelector);
+  await page.goto(`https://accounts.google.com/Login?hl=de&amp;continue=https://scholar.google.de/scholar%3Fscilib%3D${CONFIG.labelId}`);
+
+  // const loginButton = '#gs_hdr_drw_bot > a';
+  // await page.evaluate(() => {
+  //   const loginContainer = '#gs_hdr_drw';
+  //   const loginContainerBot = '#gs_hdr_drw_bot';
+  //   const loginButton = '#gs_hdr_drw_bot > a';
+  //   const $ = window.$; //otherwise the transpiler will rename it and won't work
+  //   $(loginContainerBot).css({
+  //     'visibility': 'visible',
+  //     'display': 'block'
+  //   });
+  //   $(loginContainer).css({
+  //     'transform': 'none'
+  //   });
+  // });
+
+  // await page.click(loginButton);
+
+  const userNameSelector = '#identifierId';
+  const nextButton = '#identifierNext';
+  const passwordSelector = 'input[type="password"]';
+
+  await page.click(userNameSelector);
+  await page.keyboard.type(CRED.username);
+  await page.click(nextButton);
+
+  await page.addScriptTag({path: require.resolve('jquery')})
+  await page.evaluate(() => {
+    const $ = window.$;
+    $('input[type="password"]').value = 'laksdjf';
+  });
+  // await page.click(passwordSelector);
+  // await page.keyboard.type(CRED.password);
+  // await page.click(nextButton);
+  
 
   if (process.env.NODE_ENV !== 'dev') {
     browser.close();

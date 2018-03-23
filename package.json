@@ -12,8 +12,9 @@
   "author": "Daniel Morgenstern <morgenstern.daniel@gmail.com",
   "license": "ISC",
   "dependencies": {
-    "notenv": "^5.0.1",
     "if-env": "^1.0.4",
+    "jquery": "^3.3.1",
+    "notenv": "^5.0.1",
     "puppeteer": "^1.2.0"
   },
   "devDependencies": {
