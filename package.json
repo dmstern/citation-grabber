@@ -3,11 +3,23 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "eslint": "eslint *.js --fix && eslint *.js",
+    "precommit": "eslint .",
+    "start:dev": "nodenv -f .",
+    "start": "node ."
+  },
   "author": "Daniel Morgenstern <morgenstern.daniel@gmail.com",
   "license": "ISC",
   "dependencies": {
-    "eslint": "^4.19.1",
+    "notenv": "^5.0.1",
+    "if-env": "^1.0.4",
     "puppeteer": "^1.2.0"
+  },
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-config-node": "^2.0.0",
+    "eslint-plugin-import": "^2.9.0",
+    "node-env-run": "^2.0.1"
   }
 }

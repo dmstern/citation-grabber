@@ -1,3 +1,3 @@
 module.exports = {
-  labelId: '1025'
-}
+  labelId: '1025',
+};
