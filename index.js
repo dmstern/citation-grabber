@@ -1,60 +1,114 @@
-/* globals window */
-
 const puppeteer = require("puppeteer");
 const CRED = require("./cred");
 const CONFIG = require("./config");
+const fs = require("fs");
+const path = require("path");
+
+const googleScholarUrl = "https://scholar.google.de/scholar?scilib=";
+const log = {
+  info(message) {
+    process.stdout.write(`${message}.\n`);
+  },
+
+  error(message, error) {
+    process.stderr.write(`${message}. \n ${error}\n`);
+  }
+};
 
 function timeout(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 async function login(page) {
-  await page.goto(`https://accounts.google.com/Login?hl=de&amp`);
+  try {
+    log.info("Logging in to Google..");
+    await page.goto(`https://accounts.google.com/Login?hl=de&amp`);
 
-  const userNameSelector = "#identifierId";
-  const nextButton = "#identifierNext";
+    const userNameSelector = "#identifierId";
+    const nextButton = "#identifierNext";
 
-  await page.click(userNameSelector);
-  await page.keyboard.type(CRED.username);
-  await page.click(nextButton);
+    await page.click(userNameSelector);
+    await page.keyboard.type(CRED.username);
+    await page.click(nextButton);
 
-  const passwordSelector = '#password input[type="password"]';
-  const passwordNextButton = "#passwordNext";
-  await timeout(2000);
-  await page.click(passwordSelector);
-  await page.keyboard.type(CRED.password);
-  await page.click(passwordNextButton);
-  await page.waitForNavigation({waitUntil: 'networkidle2'});
+    const passwordSelector = '#password input[type="password"]';
+    const passwordNextButton = "#passwordNext";
+    await timeout(2000);
+    await page.click(passwordSelector);
+    await page.keyboard.type(CRED.password);
+    await page.click(passwordNextButton);
+    await page.waitForNavigation({ waitUntil: "networkidle2", timeout: 3000 });
+  } catch (error) {
+    log.error("Login failed.", error);
+    throw error;
+  }
 }
 
 async function grabCitations(page) {
-  await page.goto(`https://scholar.google.de/scholar?scilib=${CONFIG.labelId}`);
+  try {
+    log.info("Navigating to Google Scholar...");
+    await page.goto(`${googleScholarUrl}${CONFIG.labelId}`);
 
-  const selectAllCitations = '#gs_res_ab_xall';
-  const exportCitations = '#gs_res_ab_exp-b';
-  const bibTex = '#gs_res_ab_exp-d a:nth-child(1)';
-  page.setViewport({width: 1280, height: 768});
-  await page.click(selectAllCitations);
-  await page.click(exportCitations);
-  await page.click(bibTex);
-  await page.waitForNavigation({waitUntil: 'networkidle2'});
+    // await page.waitForNavigation({ waitUnitl: "networkidle2", timeout: 2000 });
+    const selectAllCitations = "#gs_res_ab_xall";
+    const exportCitations = "#gs_res_ab_exp-b";
+    const bibTex = "#gs_res_ab_exp-d a:nth-child(1)"; // TODO make this configurable
+    page.setViewport({ width: 1280, height: 768 });
+    await page.click(selectAllCitations);
+    await page.click(exportCitations);
+    await page.click(bibTex);
+    await page.waitForNavigation({ waitUntil: "networkidle2", timeout: 5000 });
+  } catch (error) {
+    log.error("Failed to grab citations.", error);
+    throw error;
+  }
+}
+
+async function downloadCitations(page) {
+  try {
+    log.info("Downloading citations...");
+
+    // get citations from dom:
+    const contentSelector = await page.$("pre");
+    const content = await page.evaluate(
+      element => element.innerHTML,
+      contentSelector
+    );
+
+    // download citations:
+    fs.writeFile(path.join(CONFIG.outPath, CONFIG.fileName), content, error => {
+      if (error) {
+        log.error("An error occured while writing the file.", error);
+        throw error;
+      }
+
+      log.info("The file has been saved. Happy writing!");
+    });
+  } catch (error) {
+    log.error("Failed to download citations.", error);
+    throw error;
+  }
 }
 
 async function run() {
-  try {
-    const browser = await puppeteer.launch({
-      headless: process.env.NODE_ENV !== "dev"
-    });
-    const page = await browser.newPage();
+  const browser = await puppeteer.launch({
+    headless: process.env.NODE_ENV !== "dev"
+  });
+  const page = await browser.newPage();
 
+  try {
     await login(page);
     await grabCitations(page);
-
+    await downloadCitations(page);
+  } catch (error) {
+    log.error(
+      "Something went wrong! \n Please read README.md or file an issue at https://github.com/dmstern/citation-grabber/issues.",
+      error
+    );
+  } finally {
     if (process.env.NODE_ENV !== "dev") {
       browser.close();
     }
-  } catch (err) {
-    console.error("Something went wrong!", err);
   }
 }
 
