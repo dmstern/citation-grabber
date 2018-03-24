@@ -14,6 +14,27 @@ const OPTIONS = {
 
 Object.assign(OPTIONS, CONFIG);
 
+const selectors = {
+  email: "#Email",
+  next: "#next",
+  password: "#Passwd",
+  passwordNext: "#signIn",
+  selectAllCitations: "#gs_res_ab_xall",
+  exportCitations: "#gs_res_ab_exp-b",
+  bibTex: "#gs_res_ab_exp-d a:nth-child(1)"
+};
+
+const devSelectors = {
+  email: "#identifierId",
+  next: "#identifierNext",
+  password: '#password input[type="password"]',
+  passwordNext: "#passwordNext"
+};
+
+if (process.env.NODE_ENV === "dev") {
+  Object.assign(selectors, devSelectors);
+}
+
 const log = {
   info(message) {
     process.stdout.write(`${message}.\n`);
@@ -33,21 +54,18 @@ async function login(page) {
     log.info("Logging in to Google..");
     await page.goto(googleLoginPageUrl);
 
-    const userNameSelector = "#identifierId";
-    const nextButton = "#identifierNext";
+    await page.waitForSelector(selectors.email, { visible: true });
 
-    await page.click(userNameSelector);
+    await page.click(selectors.email);
     await page.keyboard.type(OPTIONS.credentials.username);
-    await page.click(nextButton);
+    await page.click(selectors.next);
 
-    const passwordSelector = '#password input[type="password"]';
-    const passwordNextButton = "#passwordNext";
+    await timeout(8000);
 
-    await timeout(2000);
-    await page.click(passwordSelector);
+    await page.click(selectors.password);
     await page.keyboard.type(OPTIONS.credentials.password);
-    await page.click(passwordNextButton);
-    await page.waitForNavigation({ waitUntil: "networkidle2", timeout: 3000 });
+    await page.click(selectors.passwordNext);
+    await page.waitForNavigation({ waitUntil: "networkidle2" });
   } catch (error) {
     log.error("Login failed.", error);
     throw error;
@@ -58,15 +76,14 @@ async function grabCitations(page) {
   try {
     log.info("Navigating to Google Scholar...");
     await page.goto(`${googleScholarUrl}${OPTIONS.labelId}`);
-
-    const selectAllCitations = "#gs_res_ab_xall";
-    const exportCitations = "#gs_res_ab_exp-b";
-    const bibTex = "#gs_res_ab_exp-d a:nth-child(1)";
     page.setViewport({ width: 1280, height: 768 });
-    await page.click(selectAllCitations);
-    await page.click(exportCitations);
-    await page.click(bibTex);
-    await page.waitForNavigation({ waitUntil: "networkidle2", timeout: 5000 });
+    await page.waitForSelector("#gs_res_ab_xall", { visible: true });
+
+    log.info("Getting citations...");
+    await page.click(selectors.selectAllCitations);
+    await page.click(selectors.exportCitations);
+    await page.click(selectors.bibTex);
+    await page.waitForNavigation({ waitUntil: "networkidle2" });
   } catch (error) {
     log.error("Failed to grab citations.", error);
     throw error;
@@ -105,7 +122,7 @@ async function downloadCitations(page) {
 
 async function run() {
   const browser = await puppeteer.launch({
-    headless: false // process.env.NODE_ENV !== "dev" // TODO: login fails if chrome runs headless. see https://github.com/dmstern/citation-grabber/issues/1
+    headless: process.env.NODE_ENV !== "dev" // TODO: login fails if chrome runs headless. see https://github.com/dmstern/citation-grabber/issues/1
   });
   const page = await browser.newPage();
 
