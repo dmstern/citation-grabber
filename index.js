@@ -1,5 +1,4 @@
 const puppeteer = require("puppeteer");
-const CRED = require("./cred");
 const CONFIG = require("./config");
 const fs = require("fs");
 const path = require("path");
@@ -38,7 +37,7 @@ async function login(page) {
     const nextButton = "#identifierNext";
 
     await page.click(userNameSelector);
-    await page.keyboard.type(CRED.username);
+    await page.keyboard.type(OPTIONS.credentials.username);
     await page.click(nextButton);
 
     const passwordSelector = '#password input[type="password"]';
@@ -46,7 +45,7 @@ async function login(page) {
 
     await timeout(2000);
     await page.click(passwordSelector);
-    await page.keyboard.type(CRED.password);
+    await page.keyboard.type(OPTIONS.credentials.password);
     await page.click(passwordNextButton);
     await page.waitForNavigation({ waitUntil: "networkidle2", timeout: 3000 });
   } catch (error) {

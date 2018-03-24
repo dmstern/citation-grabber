@@ -18,5 +18,14 @@ module.exports = {
    * The filename downloaded citations file.
    * Default: "citations.bib"
    */
-  fileName: "citations.bib"
+  fileName: "citations.bib",
+
+  /**
+   * Your Google login information
+   * _Don't worry about privacy if you want to contribute to this project: the `config.js` file is in `.gitignore`._ 😉
+   */
+  credentials: {
+    username: "<your.google.username>",
+    password: "<your.password>"
+  }
 };

@@ -1,4 +1,0 @@
-module.exports = {
-  username: "<your.google.username>",
-  password: "<your.password>"
-};

@@ -16,21 +16,15 @@ Automatically download your bookmarked citations from Google Scholar in BibTex f
   npm install
   ```
 
-## Usage
-
-* Duplicate the file [cred.js.sample](cred.js.sample), remove the `.sample` suffix and fill in your Google login credentials.
-
-  _Don't worry about privacy if you want to contribute to this project: the `cred.js` file is in `.gitignore`. ;)_
-
-* Then run
-
-  ```shell
-  npm start
-  ```
-
 ## Configuration
 
-See [config.js](config.js).
+Duplicate the file [config.js.sample](config.js.sample), remove the `.sample` suffix and configure the parameters for your needs.
+
+## Usage
+
+```shell
+npm start
+```
 
 ## Known Issues
 
