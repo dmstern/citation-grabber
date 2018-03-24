@@ -22,9 +22,42 @@ Duplicate the file [config.js.sample](config.js.sample), remove the `.sample` su
 
 ## Usage
 
+### In a terminal
+
 ```shell
 npm start
 ```
+
+### In TexStudio
+
+* Create a new macro ("macros" > "edit macros...")
+* Click on "Add"
+* Name it
+* At "Type" select "Script"
+* Latex Content: Fill in this script:
+
+  **_Windows:_**
+
+  ```js
+  %SCRIPT
+  system("npm.cmd start", workingDirectory="[path-to-citation-grabber]")
+  ```
+
+  _(Example:)_
+
+  ```js
+  %SCRIPT
+  system("npm.cmd start", workingDirectory="C:/Users/morge/projects/citation-grabber/")
+  ```
+
+  **_(Linux)_**
+
+  ```js
+  %SCRIPT
+  system("npm start", workingDirectory="/home/dmstern/projects/citation-grabber")
+  ```
+
+Now you can suck the your newest Google Scholar catations right from TeXStudio by pressing Shift+F[NumberOfMacro].
 
 ## Known Issues
 
