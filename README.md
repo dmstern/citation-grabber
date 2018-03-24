@@ -18,7 +18,7 @@ Automatically download your bookmarked citations from Google Scholar in BibTex f
 
 ## Configuration
 
-Duplicate the file [config.js.sample](config.js.sample), remove the `.sample` suffix and configure the parameters for your needs.
+Duplicate the file [config.js.sample](https://github.com/dmstern/citation-grabber/blob/master/config.js.sample), remove the `.sample` suffix and configure the parameters for your needs.
 
 ## Usage
 
