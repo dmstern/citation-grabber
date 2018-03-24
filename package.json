@@ -1,7 +1,7 @@
 {
   "name": "citation-grabber",
   "version": "1.0.0",
-  "description": "",
+  "description": "Automatically download your bookmarked citations from Google Scholar in BibTex format.",
   "main": "index.js",
   "scripts": {
     "eslint": "eslint *.js --fix && eslint *.js",
@@ -11,16 +11,20 @@
   },
   "author": "Daniel Morgenstern <morgenstern.daniel@gmail.com",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dmstern/citation-grabber"
+  },
+  "bugs": "https://github.com/dmstern/citation-grabber/issues",
   "dependencies": {
     "if-env": "^1.0.4",
     "jquery": "^3.3.1",
-    "notenv": "^5.0.1",
-    "puppeteer": "^1.2.0"
+    "puppeteer": "^1.2.0",
+    "node-env-run": "^2.0.1"
   },
   "devDependencies": {
     "eslint": "^4.19.1",
     "eslint-config-node": "^2.0.0",
-    "eslint-plugin-import": "^2.9.0",
-    "node-env-run": "^2.0.1"
+    "eslint-plugin-import": "^2.9.0"
   }
 }

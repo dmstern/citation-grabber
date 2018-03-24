@@ -57,7 +57,7 @@ npm start
   system("npm start", workingDirectory="/home/dmstern/projects/citation-grabber")
   ```
 
-Now you can suck the your newest Google Scholar catations right from TeXStudio by pressing Shift+F[NumberOfMacro].
+Now you can pull the your newest Google Scholar catations right from TeXStudio by pressing Shift+F[NumberOfMacro].
 
 ## Known Issues
 
