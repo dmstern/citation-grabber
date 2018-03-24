@@ -6,12 +6,21 @@ const path = require("path");
 
 const googleLoginPageUrl = "https://accounts.google.com/Login?hl=de&amp";
 const googleScholarUrl = "https://scholar.google.de/scholar?scilib=";
+
+const OPTIONS = {
+  labelId: 1,
+  fileName: "citations.bib",
+  outPath: "."
+};
+
+Object.assign(OPTIONS, CONFIG);
+
 const log = {
   info(message) {
     process.stdout.write(`${message}.\n`);
   },
 
-  error(message, error) {
+  error(message, error = "") {
     process.stderr.write(`${message}. \n ${error}\n`);
   }
 };
@@ -49,12 +58,11 @@ async function login(page) {
 async function grabCitations(page) {
   try {
     log.info("Navigating to Google Scholar...");
-    await page.goto(`${googleScholarUrl}${CONFIG.labelId || 1}`);
+    await page.goto(`${googleScholarUrl}${OPTIONS.labelId}`);
 
-    // await page.waitForNavigation({ waitUnitl: "networkidle2", timeout: 2000 });
     const selectAllCitations = "#gs_res_ab_xall";
     const exportCitations = "#gs_res_ab_exp-b";
-    const bibTex = "#gs_res_ab_exp-d a:nth-child(1)"; // TODO make this configurable
+    const bibTex = "#gs_res_ab_exp-d a:nth-child(1)";
     page.setViewport({ width: 1280, height: 768 });
     await page.click(selectAllCitations);
     await page.click(exportCitations);
@@ -78,14 +86,18 @@ async function downloadCitations(page) {
     );
 
     // download citations:
-    fs.writeFile(path.join(CONFIG.outPath, CONFIG.fileName), content, error => {
-      if (error) {
-        log.error("An error occured while writing the file.", error);
-        throw error;
-      }
+    fs.writeFile(
+      path.join(OPTIONS.outPath, OPTIONS.fileName),
+      content,
+      error => {
+        if (error) {
+          log.error("An error occured while writing the file.", error);
+          throw error;
+        }
 
-      log.info("The file has been saved. Happy writing!");
-    });
+        log.info("The file has been saved. Happy writing!");
+      }
+    );
   } catch (error) {
     log.error("Failed to download citations.", error);
     throw error;
@@ -104,8 +116,7 @@ async function run() {
     await downloadCitations(page);
   } catch (error) {
     log.error(
-      "Something went wrong! \n Please read README.md or file an issue at https://github.com/dmstern/citation-grabber/issues.",
-      error
+      "Something went wrong! \n Please read README.md or file an issue at https://github.com/dmstern/citation-grabber/issues."
     );
   } finally {
     if (process.env.NODE_ENV !== "dev") {
