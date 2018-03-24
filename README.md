@@ -4,7 +4,7 @@ Automatically download your bookmarked citations from Google Scholar in BibTex f
 
 ## Prerequisites
 
-[Node.js](https://nodejs.org) is installed.
+[Node.js](https://nodejs.org) and [npm](https://www.npmjs.com/package/install) is installed.
 
 ## Installation
 

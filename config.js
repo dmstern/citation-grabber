@@ -1,3 +1,6 @@
+/**
+ * Edit this config parameters for your needs.
+ */
 module.exports = {
   /**
    * If you want to download the citations of specific label of your library, go this label and copy the number after `scilib=` in the url.
