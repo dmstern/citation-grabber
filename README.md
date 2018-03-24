@@ -28,4 +28,4 @@ See [config.js](config.js).
 
 ## Known Issues
 
-see https://github.com/dmstern/citation-grabber/issues?q=is%3Aopen
+see [issues](https://github.com/dmstern/citation-grabber/issues?q=is%3Aopen).
