@@ -50,7 +50,7 @@ npm start
   system("npm.cmd start", workingDirectory="C:/Users/morge/projects/citation-grabber/")
   ```
 
-  **_(Linux)_**
+  **_Linux:_**
 
   ```js
   %SCRIPT
