@@ -4,6 +4,7 @@ const CONFIG = require("./config");
 const fs = require("fs");
 const path = require("path");
 
+const googleLoginPageUrl = "https://accounts.google.com/Login?hl=de&amp";
 const googleScholarUrl = "https://scholar.google.de/scholar?scilib=";
 const log = {
   info(message) {
@@ -22,7 +23,7 @@ function timeout(ms) {
 async function login(page) {
   try {
     log.info("Logging in to Google..");
-    await page.goto(`https://accounts.google.com/Login?hl=de&amp`);
+    await page.goto(googleLoginPageUrl);
 
     const userNameSelector = "#identifierId";
     const nextButton = "#identifierNext";
@@ -33,6 +34,7 @@ async function login(page) {
 
     const passwordSelector = '#password input[type="password"]';
     const passwordNextButton = "#passwordNext";
+
     await timeout(2000);
     await page.click(passwordSelector);
     await page.keyboard.type(CRED.password);
@@ -47,7 +49,7 @@ async function login(page) {
 async function grabCitations(page) {
   try {
     log.info("Navigating to Google Scholar...");
-    await page.goto(`${googleScholarUrl}${CONFIG.labelId}`);
+    await page.goto(`${googleScholarUrl}${CONFIG.labelId || 1}`);
 
     // await page.waitForNavigation({ waitUnitl: "networkidle2", timeout: 2000 });
     const selectAllCitations = "#gs_res_ab_xall";
@@ -92,7 +94,7 @@ async function downloadCitations(page) {
 
 async function run() {
   const browser = await puppeteer.launch({
-    headless: process.env.NODE_ENV !== "dev"
+    headless: false // process.env.NODE_ENV !== "dev" // TODO: login fails if chrome runs headless
   });
   const page = await browser.newPage();
 
