@@ -68,6 +68,6 @@ Now you can pull the your newest Google Scholar catations right from TeXStudio b
   npm run start:dev
   ```
 
-* Alternatively (or additionally), you can run citation-grabber in debug mode by setting `debugMode: true` in your `config.js` file.
+* Alternatively (or additionally), you can run citation-grabber in debug mode by setting `debugMode: true` in your `config.js` file. This will take screenshots from every step of citation grabbing process.
 
 If this does not solve the problem, please file a bug at [GitHub issues](https://github.com/dmstern/citation-grabber/issues?q=is%3Aopen).
