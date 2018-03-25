@@ -27,5 +27,10 @@ module.exports = {
   credentials: {
     username: "<your.google.username>",
     password: "<your.password>"
-  }
+  },
+
+  /**
+   * set this to true to get screenshots from every step of citation grabbing process in order to see what might get wrong.
+   */
+  debugMode: false
 };

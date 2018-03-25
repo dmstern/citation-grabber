@@ -16,6 +16,23 @@ const log = {
   }
 };
 
+let screenshotCounter = 0;
+const logDir = "./log";
+async function debugScreenshot(page) {
+  if (!getConfig().debugMode) {
+    return;
+  }
+  fs.exists(logDir, exists => {
+    if (!exists) {
+      fs.mkdir(logDir);
+    }
+  });
+  await page.screenshot({
+    path: `${logDir}/screenshot-${screenshotCounter++}.png`,
+    type: "png"
+  });
+}
+
 function getConfig() {
   if (!config) {
     config = {
@@ -68,17 +85,22 @@ async function login(page) {
     await page.goto(googleLoginPageUrl);
 
     await page.waitForSelector(selectors.email, { visible: true });
+    await debugScreenshot(page);
 
     await page.click(selectors.email);
     await page.keyboard.type(getConfig().credentials.username);
+    await debugScreenshot(page);
     await page.click(selectors.next);
 
     await timeout(8000);
 
+    await debugScreenshot(page);
     await page.click(selectors.password);
     await page.keyboard.type(getConfig().credentials.password);
+    await debugScreenshot(page);
     await page.click(selectors.passwordNext);
     await page.waitForNavigation({ waitUntil: "networkidle2" });
+    await debugScreenshot(page);
   } catch (error) {
     log.error("Login failed.", error);
     throw error;
@@ -89,14 +111,20 @@ async function grabCitations(page) {
   try {
     log.info("Navigating to Google Scholar...");
     await page.goto(`${googleScholarUrl}${getConfig().labelId}`);
+    await debugScreenshot(page);
     page.setViewport({ width: 1280, height: 768 });
     await page.waitForSelector("#gs_res_ab_xall", { visible: true });
+    await debugScreenshot(page);
 
     log.info("Getting citations...");
     await page.click(selectors.selectAllCitations);
+    await debugScreenshot(page);
     await page.click(selectors.exportCitations);
+    await debugScreenshot(page);
     await page.click(selectors.bibTex);
+    await debugScreenshot(page);
     await page.waitForNavigation({ waitUntil: "networkidle2" });
+    await debugScreenshot(page);
   } catch (error) {
     log.error("Failed to grab citations.", error);
     throw error;
