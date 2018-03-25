@@ -6,16 +6,33 @@ let config = null;
 const googleLoginPageUrl = "https://accounts.google.com/Login?hl=de&amp";
 const googleScholarUrl = "https://scholar.google.de/scholar?scilib=";
 
+const log = {
+  info(message) {
+    process.stdout.write(`${message}.\n`);
+  },
+
+  error(message, error = "") {
+    process.stderr.write(`${message}. \n ${error}\n`);
+  }
+};
+
 function getConfig() {
   if (!config) {
-    const defaults = {
+    config = {
       labelId: 1,
       fileName: "citations.bib",
       outPath: "."
     };
 
-    config = require("./config");
-    Object.assign(defaults, config);
+    try {
+      const userConfig = require("./config");
+      Object.assign(config, userConfig);
+    } catch (error) {
+      log.error(
+        "Seems like there is no config file. Please create a config.js file as documented in README.md.",
+        error
+      );
+    }
   }
   return config;
 }
@@ -40,16 +57,6 @@ const graphicalModeSelectors = {
 if (process.env.NODE_ENV === "dev") {
   Object.assign(selectors, graphicalModeSelectors);
 }
-
-const log = {
-  info(message) {
-    process.stdout.write(`${message}.\n`);
-  },
-
-  error(message, error = "") {
-    process.stderr.write(`${message}. \n ${error}\n`);
-  }
-};
 
 function timeout(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
