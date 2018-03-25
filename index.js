@@ -1,18 +1,24 @@
 const puppeteer = require("puppeteer");
-const CONFIG = require("./config");
 const fs = require("fs");
 const path = require("path");
 
+let config = null;
 const googleLoginPageUrl = "https://accounts.google.com/Login?hl=de&amp";
 const googleScholarUrl = "https://scholar.google.de/scholar?scilib=";
 
-const OPTIONS = {
-  labelId: 1,
-  fileName: "citations.bib",
-  outPath: "."
-};
+function getConfig() {
+  if (!config) {
+    const defaults = {
+      labelId: 1,
+      fileName: "citations.bib",
+      outPath: "."
+    };
 
-Object.assign(OPTIONS, CONFIG);
+    config = require("./config");
+    Object.assign(defaults, config);
+  }
+  return config;
+}
 
 const selectors = {
   email: "#Email",
@@ -57,13 +63,13 @@ async function login(page) {
     await page.waitForSelector(selectors.email, { visible: true });
 
     await page.click(selectors.email);
-    await page.keyboard.type(OPTIONS.credentials.username);
+    await page.keyboard.type(getConfig().credentials.username);
     await page.click(selectors.next);
 
     await timeout(8000);
 
     await page.click(selectors.password);
-    await page.keyboard.type(OPTIONS.credentials.password);
+    await page.keyboard.type(getConfig().credentials.password);
     await page.click(selectors.passwordNext);
     await page.waitForNavigation({ waitUntil: "networkidle2" });
   } catch (error) {
@@ -75,7 +81,7 @@ async function login(page) {
 async function grabCitations(page) {
   try {
     log.info("Navigating to Google Scholar...");
-    await page.goto(`${googleScholarUrl}${OPTIONS.labelId}`);
+    await page.goto(`${googleScholarUrl}${getConfig().labelId}`);
     page.setViewport({ width: 1280, height: 768 });
     await page.waitForSelector("#gs_res_ab_xall", { visible: true });
 
@@ -103,7 +109,7 @@ async function downloadCitations(page) {
 
     // download citations:
     fs.writeFile(
-      path.join(OPTIONS.outPath, OPTIONS.fileName),
+      path.join(getConfig().outPath, getConfig().fileName),
       content,
       error => {
         if (error) {
