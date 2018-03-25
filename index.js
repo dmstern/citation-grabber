@@ -24,7 +24,7 @@ const selectors = {
   bibTex: "#gs_res_ab_exp-d a:nth-child(1)"
 };
 
-const devSelectors = {
+const graphicalModeSelectors = {
   email: "#identifierId",
   next: "#identifierNext",
   password: '#password input[type="password"]',
@@ -32,7 +32,7 @@ const devSelectors = {
 };
 
 if (process.env.NODE_ENV === "dev") {
-  Object.assign(selectors, devSelectors);
+  Object.assign(selectors, graphicalModeSelectors);
 }
 
 const log = {
