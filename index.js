@@ -122,7 +122,7 @@ async function downloadCitations(page) {
 
 async function run() {
   const browser = await puppeteer.launch({
-    headless: process.env.NODE_ENV !== "dev" // TODO: login fails if chrome runs headless. see https://github.com/dmstern/citation-grabber/issues/1
+    headless: process.env.NODE_ENV !== "dev"
   });
   const page = await browser.newPage();
 
