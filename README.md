@@ -59,6 +59,13 @@ npm start
 
 Now you can pull the your newest Google Scholar catations right from TeXStudio by pressing Shift+F[NumberOfMacro].
 
-## Known Issues
+## Troubleshooting
 
-see [issues](https://github.com/dmstern/citation-grabber/issues?q=is%3Aopen).
+* Sometimes you have to run the script several times until it works.
+* If you want to see, what citation-grabber is actually doing, run
+
+  ```shell
+  npm run start:dev
+  ```
+
+If this does not solve the problem, please file a bug at [GitHub issues](https://github.com/dmstern/citation-grabber/issues?q=is%3Aopen).
