@@ -18,13 +18,13 @@
   "bugs": "https://github.com/dmstern/citation-grabber/issues",
   "dependencies": {
     "if-env": "^1.0.4",
-    "jquery": "^3.3.1",
-    "puppeteer": "^1.2.0",
-    "node-env-run": "^2.0.1"
+    "jquery": "^3.4.1",
+    "node-env-run": "^2.0.1",
+    "puppeteer": "^1.17.0"
   },
   "devDependencies": {
     "eslint": "^4.19.1",
-    "eslint-config-node": "^2.0.0",
+    "eslint-config-node": "^4.0.0",
     "eslint-plugin-import": "^2.9.0"
   }
 }
